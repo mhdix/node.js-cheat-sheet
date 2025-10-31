@@ -1,25 +1,28 @@
-const express = require("express");
+ const express = require("express");
 const { body, validationResult } = require("express-validator");
 let users = require("./users");
+const { default: helmet } = require("helmet");
 const app = express();
-
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log(req);
 
-  req.body.name = "mhdix";
-  req.user = { id: 1, name: "mahdi" };
-  res.send("this is middleware 1");
-  console.log("mid 1");
+app.use(express.urlencoded({ extended: true }));
 
-  next();
-});
+//? middleware
+// app.use((req, res, next) => {
+//   req.body.name = "mhdix";
+//   req.user = { id: 1, name: "mahdi" };
+//   res.send("this is middleware 1");
 
-app.use((req, res, next) => {
-  console.log("mid 2");
-  console.log(req.body);
-  console.log(req.user);
-});
+//   next();
+// });
+
+// app.use((req, res, next) => {
+//   console.log(req.body);
+//   console.log("middle 2");
+// });
+
+app.use(express.static('public'))
+app.use(helmet())
 
 app.get("/api/users", (req, res) => {
   res.json({
@@ -42,8 +45,6 @@ app.get("/api/users/:id", (req, res) => {
     data: user,
     message: "ok",
   });
-
-  console.log(user);
 });
 
 app.post(
@@ -130,10 +131,9 @@ app.delete("/api/users/:id", (req, res) => {
   }
 
   const userIndex = users.indexOf(user);
-  console.log("userIndex", userIndex);
 
   users.splice(userIndex, 1);
-  console.log("users", users);
+
   res.json({
     data: users,
     message: "ok",
