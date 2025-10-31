@@ -1,4 +1,4 @@
- const express = require("express");
+const express = require("express");
 const { body, validationResult } = require("express-validator");
 let users = require("./users");
 const { default: helmet } = require("helmet");
@@ -21,8 +21,23 @@ app.use(express.urlencoded({ extended: true }));
 //   console.log("middle 2");
 // });
 
-app.use(express.static('public'))
-app.use(helmet())
+//!  envirment variable
+// way 1
+app.use(express.static("public"));
+// way 2
+app.use(helmet());
+
+//! whene development mode
+if (app.get("env") === "development") {
+  console.log("morgan id active");
+  //! morgan http log
+  const morgan = require("morgan");
+  app.use(morgan("tiny"));
+}
+
+//! Program environment 
+console.log("NODE_ENV", process.env.NODE_ENV);
+console.log(app.get("env"));
 
 app.get("/api/users", (req, res) => {
   res.json({
@@ -140,4 +155,5 @@ app.delete("/api/users/:id", (req, res) => {
   });
 });
 
-app.listen(3000, () => console.log("connected to port 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`connected to port ${port}`));
