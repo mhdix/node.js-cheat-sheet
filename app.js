@@ -37,7 +37,7 @@ if (app.get("env") === "development") {
 
 //! Program environment 
 console.log("NODE_ENV", process.env.NODE_ENV);
-console.log(app.get("env"));
+console.log("NODE_ENV2", app.get("env"));
 
 app.get("/api/users", (req, res) => {
   res.json({
